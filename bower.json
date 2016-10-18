@@ -1,0 +1,29 @@
+{
+  "name": "PurecloudNiceIntegration",
+  "description": "Integration with Nice",
+  "main": "app/app.js",
+  "authors": [
+    "gildas.cherruel@inin.com"
+  ],
+  "license": "Apache v2.0",
+  "keywords": [
+    "PureCloud",
+    "NICE"
+  ],
+  "homepage": "https://github.com/gildas/purecloud-performance_query_by_interaction",
+  "moduleType": [
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "mustache.js": "mustache#^2.2.1"
+  }
+}

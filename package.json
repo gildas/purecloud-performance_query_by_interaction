@@ -1,0 +1,51 @@
+{
+  "name": "performance_query_by_interaction",
+  "version": "0.0.1",
+  "description": "Performance Query By Interaction",
+  "main": "app/app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install",
+    "start": "node --harmony app/app.js",
+    "test": "./node_modules/.bin/mocha --compilers js:mocha-traceur",
+    "test_ci": "./node_modules/.bin/supervisor --no-restart-on exit --watch lib,test -- ./node_modules/.bin/mocha --compilers js:mocha-traceur"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gildas/purecloud-performance_query_by_interaction.git"
+  },
+  "keywords": [
+    "PureCloud",
+    "Interactive Intelligence"
+  ],
+  "author": "Gildas Cherruel <gildas.cherruel@inin.com>",
+  "bugs": {
+    "url": "https://github.com/gildas/purecloud-performance_query_by_interaction/issues"
+  },
+  "homepage": "https://github.com/gildas/purecloud-performance_query_by_interaction",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.15.2",
+    "bower": "1.7.9",
+    "cookie-parser": "1.4.3",
+    "debug": "2.2.0",
+    "ejs": "2.5.2",
+    "ejs-locals": "1.0.2",
+    "express": "4.14.0",
+    "express-session": "1.14.1",
+    "git-rev": "0.2.1",
+    "morgan": "1.7.0",
+    "nconf": "0.8.4",
+    "serve-favicon": "2.3.0",
+    "traceur": "0.0.111"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "mocha": "3.1.2",
+    "mocha-traceur": "2.1.0",
+    "supervisor": "0.11.0"
+  }
+}
