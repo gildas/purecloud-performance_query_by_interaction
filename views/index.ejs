@@ -1,0 +1,42 @@
+<% layout('layout') -%>
+
+<div class="jumbotron">
+    <h1>Performance Query</h1>
+    <p class="lead">Performance Query Demonstration.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Query</h2>
+        <!-- <form method="POST" action="/campaigns/{{campaign.id}}"><div class="form-horizontal"> -->
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-md-4" for="conversation_id">Conversation Id</label>
+            <input type="text" id="conversation_id" value=""/>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-offset-4 col-md4">
+              <button id="query_performance" class="btn btn-default logged_in_action" rel="conversation_id" data-processing-text="Searching..." data-processed-text="Found">
+                <span id="text" class="logged_in">Search</span>&nbsp;&nbsp;<i id="spinner" class="fa fa-refresh fa-spin logged_in"  style="font-size:18px; display: none;"></i>
+                <span class="logged_out"><span class='glyphicon glyphicon-warning-sign'></span> Login!</span>
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+function initialize_view()
+{
+  query_performance = new StateButton('query_performance', on_click_query_performance);
+}
+
+function on_click_query_performance(event)
+{
+  console.log("Query Click Event!");
+  query_performance.processing();
+
+  console.log("Querying Performance with id: %s", $('#conversation_id'));
+}
+</script>

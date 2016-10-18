@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Nice Integration Server' });
+  res.render('index', { title: 'Performance Query' });
 });
 
 module.exports = router;

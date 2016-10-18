@@ -23,12 +23,18 @@ config.argv({
   port: 3000,
   workers: 'auto',
   purecloud: {
-    region: 'mypurecloud.com',
-    organization: { id: undefined },
-    client: {
-      id:     undefined,
-      secret: undefined,
-    },
+    organizations: [
+      {
+        id:          undefined,
+        region:      'mypurecloud.com',
+        application: {
+          strategy:  'client-credentials',
+          id:        undefined,
+          secret:    undefined,
+        },
+        timeout:     5,
+      }
+    ],
   },
 });
 
@@ -75,13 +81,16 @@ if (cluster.isMaster) {
   var app = express();
 
   /**
-  * Environment and git information
+  * Environment and local variables
   */
   console.log("Version: %s (%s)", app_info.version, app.get('env'));
   debug("Debug is on");
-  gitrev.short(function(value)  { app.set('git_commit', value); console.log('Git commit: ' + value); });
-  gitrev.branch(function(value) { app.set('git_branch', value); console.log('Git branch: ' + value); });
-  gitrev.tag(function(value)    { app.set('git_tag', value);    console.log('Git tag: '    + value); });
+  app.locals.git = { commit: undefined, branch: 'master' };
+  gitrev.short(function(value)  { app.locals.git.commit = value; console.log('Git commit: ' + value); });
+  gitrev.branch(function(value) { app.locals.git.branch = value; console.log('Git branch: ' + value); });
+  gitrev.tag(function(value)    { app.locals.git.tag    = value; console.log('Git tag: '    + value); });
+  app.locals.app_version = app_info.version;
+  app.locals.purecloud   = { organizations: config.get('purecloud:organizations') };
 
   /**
   * Configure the application.
@@ -113,28 +122,9 @@ if (cluster.isMaster) {
     debug('Session id: ' + req.session.id);
     if (req.session.token) { debug('Session Token: ' + req.session.token); }
     if (req.session.user)  { debug('Session user:  ' + req.session.user.username); }
-    req.purecloud = {
-      environment:    config.get('purecloud:region'),
-      organizationId: config.get('purecloud:organization:id'), 
-      strategy:       'client-credentials',
-      clientId:       config.get('purecloud:client:id'),
-      clientSecret:   config.get('purecloud:client:secret'),
-      token:          req.session.token,
-      user:           req.session.user,
-      timeout:        5,
-    };
-    res.locals.purecloud = {
-      environment:    config.get('purecloud:region'),
-      organizationId: config.get('purecloud:organization:id'), 
-      token:          req.session.token,
-      user:           req.session.user,
-      timeout:        5,
-    };
-    res.locals.git = {
-      commit: app.get('git_commit'),
-      branch: app.get('git_branch')
-    };
-    res.locals.app_version = app_info.version;
+    res.locals.purecloud_token = req.session.token;
+    res.locals.purecloud_user  = req.session.user;
+    res.locals.environment     = app.get('env');
     next();
   });
 

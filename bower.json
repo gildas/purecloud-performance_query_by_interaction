@@ -24,6 +24,9 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "mustache.js": "mustache#^2.2.1"
+    "bootswatch-dist": "superhero",
+    "mustache.js": "mustache#^2.2.1",
+    "PureCloud": "purecloud-api#^0.70.2",
+    "js-cookie": "^2.1.3"
   }
 }
