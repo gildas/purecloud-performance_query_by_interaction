@@ -1,7 +1,6 @@
 FROM node:6.8
 MAINTAINER Gildas Cherruel <gildas.cherruel@inin.com>
 
-ENV NODE_ENV=development
 WORKDIR /usr/local/src
 
 COPY package.json /usr/local/src/package.json

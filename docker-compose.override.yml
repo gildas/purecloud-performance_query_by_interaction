@@ -1,0 +1,15 @@
+version: '2'
+services:
+  purecloud_demo:
+    environment:
+      DEBUG:      Application,PureCloud
+      NODE_ENV:   development
+      WORKERS:    1
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/local/src/app
+      - ./public:/usr/local/src/public
+      - ./routes:/usr/local/src/routes
+      - ./test:/usr/local/src/test
+      - ./views:/usr/local/src/views

@@ -1,0 +1,10 @@
+version: '2'
+services:
+  purecloud_demo:
+    build: .
+    ports:
+      - "80:3000"
+networks:
+  default:
+    external:
+      name: bridge
