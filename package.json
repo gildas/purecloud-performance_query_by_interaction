@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Performance Query By Interaction",
   "main": "app/app.js",
+  "private": true,
   "directories": {
     "test": "tests"
   },
@@ -25,7 +26,7 @@
     "url": "https://github.com/gildas/purecloud-performance_query_by_interaction/issues"
   },
   "homepage": "https://github.com/gildas/purecloud-performance_query_by_interaction",
-  "license": "ISC",
+  "license": "Apache v2.0",
   "dependencies": {
     "body-parser": "1.15.2",
     "bower": "1.7.9",

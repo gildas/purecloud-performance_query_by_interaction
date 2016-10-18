@@ -1,6 +1,6 @@
 {
-  "name": "PurecloudNiceIntegration",
-  "description": "Integration with Nice",
+  "name": "performance_query_by_interaction",
+  "description": "Performance Query By Interaction",
   "main": "app/app.js",
   "authors": [
     "gildas.cherruel@inin.com"
