@@ -50,7 +50,7 @@ Run all commands from the *root* of the project.
    ```
 8. Configure the instance with the PureCloud organizations you want (be sure to create the config.json file [see the next section]):  
    ```sh
-   heroku config:set PURECLOUD_ORGANIZATIONS="$(jq -cM '.purecloud.organizations' config.json)"
+   heroku config:set PURECLOUD_ORGANIZATIONS="$(jq -c -M '.purecloud.organizations' config.json)"
    ```
    The best is to use the JSON file you created while testing locally (or to write one) and to process it with [jq](https://stedolan.github.io/jq) under Mac or Linux to get a compact string.  
    On Windows, using PowerShell 3.0+, one could write:  
@@ -75,7 +75,7 @@ To see if it is all smooth, you can check the logs at:
 heroku logs --tail
 ```
 
-Checkout our own Heroku dyno: http://purecloud-dialer.herokuapp.com
+Checkout our own Heroku dyno: [https://young-gorge-17675.herokuapp.com/](https://young-gorge-17675.herokuapp.com/)
 
 Running it with [Docker](https://www.docker.com)
 ------------------------------------------------
