@@ -1,5 +1,5 @@
-DialerPureCloudAPIDemo
-======================
+Performance Conversation Details Query
+======================================
 
 A simple Website that shows how to use [Interactive Intelligence, Inc](https://www.inin.com)'s [PureCloud](https://mypurecloud.com) performance queries [API](https://developer.mypurecloud.com) 
 
