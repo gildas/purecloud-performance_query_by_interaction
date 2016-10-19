@@ -12,12 +12,12 @@
         <div class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-md-4" for="conversation_id">Conversation Id</label>
-            <input type="text" id="conversation_id" value=""/>
+            <input type="text" id="conversation_id" size="36" value=""/>
           </div>
 
           <div class="form-group">
             <div class="col-md-offset-4 col-md4">
-              <button id="query_performance" class="btn btn-default logged_in_action" rel="conversation_id" data-processing-text="Searching..." data-processed-text="Found">
+              <button id="query_performance" class="btn btn-default logged_in_action" rel="conversation_id" data-processing-text="Searching..." data-processed-text="Done">
                 <span id="text" class="logged_in">Search</span>&nbsp;&nbsp;<i id="spinner" class="fa fa-refresh fa-spin logged_in"  style="font-size:18px; display: none;"></i>
                 <span class="logged_out"><span class='glyphicon glyphicon-warning-sign'></span> Login!</span>
               </button>
@@ -25,18 +25,57 @@
           </div>
         </div>
     </div>
+    <div class="col-md-6">
+      <span id="results"></span>
+    </div>
 </div>
 <script>
 function initialize_view()
 {
   query_performance = new StateButton('query_performance', on_click_query_performance);
+
+  query_performance.initialize();
 }
 
 function on_click_query_performance(event)
 {
-  console.log("Query Click Event!");
-  query_performance.processing();
+  const AnalyticsApi = new purecloud.platform.AnalyticsApi(purecloud_session);
 
-  console.log("Querying Performance with id: %s", $('#conversation_id'));
+  console.log("Query Click Event!");
+  event.preventDefault();          // Prevent link from firing up
+
+  var interval_length   = 3600 * 24 * 7; // 1 week-ish
+  var interval_stop     = new Date(); interval_stop.setMinutes(0); interval_stop.setSeconds(0); interval_stop.setMilliseconds(0);
+  var interval_start    = new Date(interval_stop); interval_start.setSeconds(interval_start.getSeconds() - interval_length);
+  var conversation_id   = $('#conversation_id').val();
+
+  console.log('conversation id: %s', conversation_id);
+  if (conversation_id) {
+    // Sample: 22f3f8db-73c7-4089-a45a-b8a2ac2d4823
+    console.log('Querying analytics with id: %s', conversation_id);
+    query_performance.processing();
+    AnalyticsApi.postConversationsDetailsQuery({
+      interval: interval_start.toISOString() + '/' + interval_stop.toISOString(),
+      order:    'asc',
+      orderBy:  'conversationStart',
+      paging:   { pageSize: 25, pageNumber: 1 },
+      //aggregations: [],
+      //evaluationFilters: [],
+      //segmentFilters: [],
+      conversationFilters: [{
+          type: 'or',
+          'predicates': [ { type: 'dimension', dimension: 'conversationId', value: conversation_id, } ]
+      }]
+    }).then(function(results) {
+      query_performance.processed();
+      console.log("Got results: ", results);
+      $('#results').text(JSON.stringify(results));
+    }).catch(function(err) {
+      query_performance.processed();
+      render_error(err);
+    });
+  } else {
+    render_error('Conversation id cannot be empty!');
+  }
 }
 </script>
