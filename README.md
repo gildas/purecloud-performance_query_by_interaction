@@ -31,46 +31,62 @@ Run all commands from the *root* of the project.
    Check their [getting started](https://devcenter.heroku.com/articles/getting-started-with-nodejs) document otherwise.  
    Make sure node.js is installed as well (See the Local Installation section)
 3. Login your heroku account
+
    ```sh
    heroku login
    ```
+
 4. Clone the repository from github:  
+
    ```sh
    git clone https://github.com/gildas/DialerPureCloudAPIDemo.git
    ```
+
 5. Create the application, from the repository folder:  
+
    ```sh
    heroku create
    ```
+
 6. Configure your PureCloud OAUTH Application to accept the URL that was just created.  
    For instance: `http://sharp-rain-871.herokuapp.com/`
 7. Deploy the application to your [Heroku apps](https://dashboard.heroku.com/apps).  
+
    ```sh
    git push heroku master
    ```
+
 8. Configure the instance with the PureCloud organizations you want (be sure to create the config.json file [see the next section]):  
+
    ```sh
    heroku config:set PURECLOUD_ORGANIZATIONS="$(jq -c -M '.purecloud.organizations' config.json)"
    ```
+
    The best is to use the JSON file you created while testing locally (or to write one) and to process it with [jq](https://stedolan.github.io/jq) under Mac or Linux to get a compact string.  
    On Windows, using PowerShell 3.0+, one could write:  
+
    ```posh
    heroku config:set PURECLOUD_ORGANIZATIONS=((Get-Content config.json) -join "`n" | ConvertFrom-Json | Select purecloud | select organizations | ConvertTo-Json -Compress)
    ```
+
    (_To be tested!_)
 9. Make sure the instance is running  
+
    ```sh
    heroku ps:scale web=1
    ```
+
    Here I give only 1 Dyno, for a quick test, that's more than enough.  
    In production, we should use more dynos.
 10. Have fun a use it!  
    Either open your browser and go to the web site created in 3, or type:  
+
    ```sh
    heroku open
    ```
 
 To see if it is all smooth, you can check the logs at:
+
 ```sh
 heroku logs --tail
 ```
@@ -83,11 +99,13 @@ Running it with [Docker](https://www.docker.com)
 ### While testing or developing
 
 To start the container:
+
 ```sh
 $ docker-compose up
 ```
 
 If you need to rebuild the images, simply run:
+
 ```sh
 $ docker-compose up --build
 ```
@@ -98,6 +116,7 @@ Then browse to: `http://localhost:3000/`
 TODO:  This section will need to be way more documented. E.g.: deployment on Hyper-V, AWS, Azure, etc.
 
 To start the containers:
+
 ```
 $ PURECLOUD_CLIENT_ID=ahbfe PURECLOUD_CLIENT_SECRET=12456 docker-compose -f docker-compose.yml -f docker-compose.production.yml up
 ```
@@ -118,7 +137,7 @@ In the root folder of the project, write a config.json file, like this:
         "region": "mypurecloud.com.au",
         "application": {
           "strategy": "implicit",
-          "id":       ""APP UUID
+          "id":       "APP UUID"
         }
       },
       {
@@ -127,7 +146,7 @@ In the root folder of the project, write a config.json file, like this:
         "region": "mypurecloud.com",
         "application": {
           "strategy": "implicit",
-          "id":       ""APP UUID
+          "id":       "APP UUID"
         }
       }
     ]
@@ -150,17 +169,20 @@ Unit Testing
 (TODO: Rewrite this section!)
 
 To run the tests once, run:
+
 ```
 $ npm test
 ```
 
 If you are writing code, you can run the tests continuously:
+
 ```sh
 npm run test_ci
 ```
 
 If you want to see some additional debug messages during the tests:
-```
+
+```sh
 DEBUG=x,y,z npm run test_ci
 ```
 
@@ -168,6 +190,7 @@ Where x,y,z is a comma-separated list of these possible values:
 - test  (this traces the tests themselves)
 
 If you want to run the tests in docker, just type:
+
 ```sh
 $ ./drun --test
 ```
