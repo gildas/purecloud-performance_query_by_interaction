@@ -19,8 +19,7 @@
 
       var purecloud_organizations   = [];
       var purecloud_organization_id = undefined;
-      var purecloud_session         = null;
-
+      var purecloud_session         = undefined;
     </script>
   </head>
   <body>
@@ -126,12 +125,31 @@
         organization_id   = organization_id || $(this).attr('data-orgid');
         if (organization_id) Cookies.set('PureCloud_organization_id', organization_id);
 
-        var purecloud_organization = purecloud_organizations.find(function(organization) { return organization.id === purecloud_organization_id; });
+        console.log('organization id: %s', organization_id);
+        console.log('Searching in %m', purecloud_organizations);
+        var purecloud_organization = purecloud_organizations.find(function(organization) { return organization.id === organization_id; });
 
         console.log("Authorizing with organization \"%s\" on %s...", purecloud_organization.name, purecloud_organization.region);
-        purecloud_session.setEnvironment(purecloud_organization.region);
-        purecloud_session.options.clientId = purecloud_organization.application.id;
-        if (purecloud_organization.timeout) purecloud_session.options.timeout = purecloud_organization.timeout; 
+        if (purecloud_session) {
+          console.log('updating existing purecloud_session');
+          purecloud_session.setEnvironment(purecloud_organization.region);
+          purecloud_session.options.clientId = purecloud_organization.application.id;
+          if (purecloud_organization.timeout) purecloud_session.options.timeout = purecloud_organization.timeout;
+        } else {
+          console.log('Instantiating a new purecloud_session object');
+          purecloud_session = purecloud.platform.PureCloudSession({
+            strategy:    purecloud_organization.strategy || 'implicit',
+            clientId:    purecloud_organization.application.id,
+            environment: purecloud_organization.region,
+            storageKey:  'purecloud_auth_token',
+            timeout:     purecloud_organization.timeout || 2000,
+            redirectUrl: window.location.href,
+          });
+          if ('<%- environment %>' === 'development') {
+            console.log("PureCloud Session: %m", purecloud_session);
+            purecloud_session.debugLog = console.log;
+          }
+        }
 
         purecloud_session.login()
           .then(function() {
@@ -182,6 +200,7 @@
         $('.logged_in').hide();
         $('.logged_in_action').addClass('disabled');
         $('.logged_out').show();
+        console.log('PureCloud object is now: %m', purecloud_session);
         console.groupEnd();
       }
 
