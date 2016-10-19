@@ -100,6 +100,7 @@ if (cluster.isMaster) {
   } else {
     app.locals.purecloud   = { organizations: config.get('purecloud:organizations') };
   }
+  debug('PureCloud Organizations: ', app.locals.purecloud);
 
   /**
   * Configure the application.
