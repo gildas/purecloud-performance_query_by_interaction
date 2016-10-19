@@ -90,7 +90,16 @@ if (cluster.isMaster) {
   gitrev.branch(function(value) { app.locals.git.branch = value; console.log('Git branch: ' + value); });
   gitrev.tag(function(value)    { app.locals.git.tag    = value; console.log('Git tag: '    + value); });
   app.locals.app_version = app_info.version;
-  app.locals.purecloud   = { organizations: config.get('purecloud:organizations') };
+  if (typeof(config.get('purecloud:organizations')) === 'string') {
+    try {
+      app.locals.purecloud = { organizations: JSON.parse(config.get('purecloud:organizations')) };
+    } catch (error) {
+      console.error("Error while parsing: %s", config.get('purecloud:organizations'));
+      app.locals.purecloud = { organizations: [] };
+    }
+  } else {
+    app.locals.purecloud   = { organizations: config.get('purecloud:organizations') };
+  }
 
   /**
   * Configure the application.
