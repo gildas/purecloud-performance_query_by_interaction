@@ -13,8 +13,10 @@
         <div class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-md-4" for="conversation_id">Conversation Id</label>
-            <input type="text" id="conversation_id" size="36" value=""/>
+            <!-- <input type="text" id="conversation_id" size="36" value=""/> -->
             <!-- <input type="text" id="conversation_id" size="36" value="22f3f8db-73c7-4089-a45a-b8a2ac2d4823"/> -->
+            <!-- <input type="text" id="conversation_id" size="36" value="fb85873a-8d85-4aa5-98f1-9b0352359784"/> -->
+             <input type="text" id="conversation_id" size="36" value="fb85873a-8d85-4aa5-98f1-9b0352359784"/>
           </div>
 
           <div class="form-group">
@@ -40,6 +42,22 @@
           </div>
         </div>
       </div>
+        <div class="panel panel-default">
+          <div class="panel-body text-left">
+            <div class="conversation_media_voice" style="display: none;">
+              <p><b>From</b> <span class="external_participant_address"></span></p>
+              <p><b>To</b> <span class="internal_participant_address"></span></p>
+              <hr/>
+            </div>
+            <div class="conversation_media_email" style="display: none;">
+              <p><b>From</b> <span class="external_participant_address"></span></p>
+              <p><b>To</b> <span class="internal_participant_address"></span></p>
+              <p><b>Subject</b> <span class="conversation_email_subject"></span></p>
+              <hr/>
+              <p class="conversation_email_body"></p>
+            </div>
+          </div>
+        </div>
       <div class="col-md-6">
       </div>
       <div class="col-md-3">
@@ -135,6 +153,7 @@ function on_click_query_performance(event)
       console.log("Got results: ", results);
       $('#results').show();
       var conversation = results.conversations[0];
+      var conversation_media =  conversation.participants[0].sessions[0].mediaType;
 
       var internal_participant = conversation.participants.find(function(participant) { return participant.purpose === 'agent';    });
       var external_participant = conversation.participants.find(function(participant) { return participant.purpose === 'customer'; });
@@ -151,12 +170,35 @@ function on_click_query_performance(event)
           }
           $('.internal_participant_photo').attr('alt', user.name);
           $('.internal_participant_name').text(user.name);
-          $('.internal_participant_address').text(internal_participant.sessions[0].dnis.substring(0, 20) + '...');
+          switch (conversation_media) {
+            case 'voice':
+              $('.internal_participant_address').text(internal_participant.sessions[0].dnis.substring(0, 20) + '...');
+              break;
+            case 'email':
+              $('.internal_participant_address').text(internal_participant.sessions[0].addressSelf);
+              break;
+            default:
+              console.warn("Media not yet supported: %s", conversation_media);
+              $('.internal_participant_address').text('other');
+          }
         });
       
 
       $('.external_participant_name').text(external_participant.participantName);
-      $('.external_participant_address').text(external_participant.sessions[0].ani);
+      switch (conversation_media) {
+        case 'voice':
+          $('.external_participant_address').text(external_participant.sessions[0].ani);
+          $('.conversation_media_voice').show();
+          break;
+        case 'email':
+          $('.external_participant_address').text(external_participant.sessions[0].addressSelf);
+          $('.conversation_email_subject').text(external_participant.sessions[0].segments[0].subject);
+          $('.conversation_media_email').show();
+          break;
+        default:
+          console.warn("Media not yet supported: %s", conversation_media);
+          $('.external_participant_address').text('other');
+      }
 
       var starttime = endtime = new Date(Date.parse(conversation.conversationStart));
 
