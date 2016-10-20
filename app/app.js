@@ -146,7 +146,7 @@ if (cluster.isMaster) {
   app.use(function(req, res, next) { // catch 404 and forward to error handler
     var err = new Error('Not Found');
     err.status = 404;
-    console.warn('Error: %o', err);
+    console.warn('Error: %m', err);
     next(err);
   });
 
